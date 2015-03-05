@@ -52,17 +52,20 @@ debug-datazilla:
 	@echo "docker run -ti --rm -e ... --entrypoint bash ${DATAZILLA_SERVER}"
 	@docker run \
 		--name datazilla-server --rm -ti \
+		-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION \
 		-p 9090:9090 \
 		--entrypoint bash \
 		${DATAZILLA_SERVER}
 
-check-datazilla:
+run-datazilla:
 	@echo "docker run -ti --rm -e ... ${DATAZILLA_SERVER}"
 	@docker run \
 		--name datazilla --rm -ti \
+		-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION \
+		-e INPUT_SOURCES='Ubuntu 12.10 MOZ-HW=s3://jonasfj-talos-test-results/datazilla.mozilla.org/mozilla-inbound/' \
 		-p 9090:9090 \
 		${DATAZILLA_SERVER}
 
 
-.PHONY: talos-tester check-talos-tester push-talos-tester
-.PHONY: datazilla check-datazilla push-datazilla
+.PHONY: talos-tester debug-talos-tester check-talos-tester push-talos-tester
+.PHONY: datazilla debug-datazilla run-datazilla push-datazilla

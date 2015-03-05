@@ -1,0 +1,21 @@
+{
+  "name": "datazilla-data-loading-helpers",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "debug":                "^2.1.1",
+    "lodash":               "^3.0.0",
+    "promise":              "^6.1.0",
+    "taskcluster-client":   "^0.20.0",
+    "babel":                "^4.6.3",
+    "kexec":                "^1.2.0",
+    "slugid":               "^1.0.3",
+    "mkdirp":               "^0.5.0",
+    "recursive-readdir":    "^1.2.1",
+    "superagent":           "^0.21.0",
+    "superagent-promise":   "^0.2.0"
+  },
+  "engines": {
+    "node":                 "0.10.x"
+  }
+}
