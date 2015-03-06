@@ -56,3 +56,12 @@ docker cp talos-test-2:/home/worker/artifacts ./
 https://s3-us-west-2.amazonaws.com/jonasfj-talos-test-results/short-input.csv
 
 https://s3-us-west-2.amazonaws.com/jonasfj-talos-test-results/input.csv
+
+Test Data
+---------
+
+tart/cart 40% regression:
+fe5c25b8b675   http://ftp.mozilla.org/pub/mozilla.org/firefox/tinderbox-builds/mozilla-inbound-linux64/1423689944/firefox-38.0a1.en-US.linux-x86_64.tar.bz2
+
+tart/cart normal:
+c448634fb6c9   http://ftp.mozilla.org/pub/mozilla.org/firefox/tinderbox-builds/mozilla-inbound-linux64/1423688382/firefox-38.0a1.en-US.linux-x86_64.tar.bz2
