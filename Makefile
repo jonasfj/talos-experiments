@@ -1,5 +1,4 @@
 TALOS_TESTER:="${REGISTRY}/${TALOS_TESTER_IMAGE_NAME}:${TALOS_TESTER_IMAGE_TAG}"
-DATAZILLA_SERVER:="datazilla-server"
 
 INPUT_VARIABLES:=				\
 	BUILD_URL            	\
@@ -44,28 +43,4 @@ push-talos-tester:
 		-e ${REGISTRY_EMAIL};
 	docker push ${TALOS_TESTER};
 
-datazilla:
-	docker build --no-cache -t ${DATAZILLA_SERVER} datazilla-server/;
-	@echo "Built and tagged datazilla-server as ${DATAZILLA_SERVER}";
-
-debug-datazilla:
-	@echo "docker run -ti --rm -e ... --entrypoint bash ${DATAZILLA_SERVER}"
-	@docker run \
-		--name datazilla-server --rm -ti \
-		-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION \
-		-p 9090:9090 \
-		--entrypoint bash \
-		${DATAZILLA_SERVER}
-
-run-datazilla:
-	@echo "docker run -ti --rm -e ... ${DATAZILLA_SERVER}"
-	@docker run \
-		--name datazilla --rm -ti \
-		-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION \
-		-e INPUT_SOURCES='Ubuntu 12.10 MOZ-HW=s3://jonasfj-talos-test-results/datazilla.mozilla.org/mozilla-inbound/' \
-		-p 9090:9090 \
-		${DATAZILLA_SERVER}
-
-
 .PHONY: talos-tester debug-talos-tester check-talos-tester push-talos-tester
-.PHONY: datazilla debug-datazilla run-datazilla push-datazilla

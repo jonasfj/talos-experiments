@@ -3,24 +3,6 @@ Talos Experimentation Setup
 _This repository is a collection of docker images and scripts useful for
 running experiments with Talos on the cloud._
 
-Datazilla Server Image
-----------------------
-Image for loading custom data into Datazilla from S3 and running Datazilla
-locally. This is very neat as it allows you to quickly reset a Datazilla
-deployment and load new data. It's also a very quick and reliable way of getting
-a working Datazilla environment.
-
-When started the `datazilla-server` image executes the following steps:
-  1. Configure and launch memcached and MySQL.
-  2. Configure datazilla with `talos` and `pushlog` projects.
-  3. Load data from `INPUT_SOURCES`, which is `;` delimited list of
-     `<osversion>=s3://<bucket>/<prefix>/`, where every `datazilla.json` file
-     the S3 prefix is to be submitted with the given `<osversion>`.
-  4. Upload `pushlog` based on date-range in data in `INPUT_SOURCES`.
-
-MySQL port: 3306 (datazilla:nosecret)
-WebServer port: 9090
-
 Talos Test Image
 ----------------
 Image for running talos on a build of Firefox with a set of configuration
