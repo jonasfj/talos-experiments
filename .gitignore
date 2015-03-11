@@ -1,3 +1,6 @@
 talos-tester/tp5n.zip
 data/
 config.env
+analysis/node_modules/
+data-small/
+data-large/

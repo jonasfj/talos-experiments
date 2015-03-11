@@ -47,3 +47,8 @@ fe5c25b8b675   http://ftp.mozilla.org/pub/mozilla.org/firefox/tinderbox-builds/m
 
 tart/cart normal:
 c448634fb6c9   http://ftp.mozilla.org/pub/mozilla.org/firefox/tinderbox-builds/mozilla-inbound-linux64/1423688382/firefox-38.0a1.en-US.linux-x86_64.tar.bz2
+
+
+TODO:
+ - filter down to: suite > test (by click on table row)
+ - generate data for: small-set on aws c4
