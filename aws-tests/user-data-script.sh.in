@@ -1,0 +1,91 @@
+#!/bin/bash -v
+
+# Start subshell
+(
+  # exit subshell on error
+  set -e;
+
+  export DEBIAN_FRONTEND=noninteractive;
+
+  ### Install latest docker
+  # See: https://get.docker.com/ubuntu/
+
+  # Check that HTTPS transport is available to APT
+  if [ ! -e /usr/lib/apt/methods/https ]; then
+    apt-get update;
+    apt-get install -y apt-transport-https;
+  fi;
+
+  # Add the repository to your APT sources
+  echo deb https://get.docker.com/ubuntu docker main \
+                > /etc/apt/sources.list.d/docker.list
+
+  # Then import the repository key
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+              --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9;
+
+  # Install docker
+  apt-get update;
+  apt-get install -y lxc-docker;
+
+  ### Set Environment Variables
+
+  export TESTS='{{TESTS}}';
+  export AWS_ACCESS_KEY_ID='{{AWS_ACCESS_KEY_ID}}';
+  export AWS_SECRET_ACCESS_KEY='{{AWS_SECRET_ACCESS_KEY}}';
+  export AWS_DEFAULT_REGION='{{AWS_DEFAULT_REGION}}';
+  export RESULT_BUCKET='{{RESULT_BUCKET}}';
+
+  ### Download data to run
+
+  curl -s --retry 10 -o ./input.csv '{{INPUT_URL}}';
+
+  ### Authenticate with docker registry
+
+  sudo docker login -u '{{REGISTRY_USERNAME}}' \
+                    -p '{{REGISTRY_PASSWORD}}' \
+                    -e '{{REGISTRY_EMAIL}}' \
+                    '{{REGISTRY_HOST}}';
+
+  ### Run Tests
+
+  # For each input file
+  while IFS=';' read -r REV BUILD_URL; do
+    # for each display server option
+    for DISPLAY_SERVER in xvfb xorg; do
+      export BUILD_URL="$BUILD_URL";
+      export DISPLAY_SERVER="$DISPLAY_SERVER";
+      export BRANCH_NAME="{{INSTANCE_TYPE}}/{{REGION}}/$DISPLAY_SERVER/$REV";
+      export RESULT_PREFIX="{{RESULT_PREFIX}}/$BRANCH_NAME";
+
+      sudo docker run --rm -i \
+        -e BUILD_URL="$BUILD_URL" \
+        -e TESTS="$TESTS" \
+        -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+        -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
+        -e AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION" \
+        -e RESULT_BUCKET="$RESULT_BUCKET" \
+        -e RESULT_PREFIX="$RESULT_PREFIX" \
+        -e DISPLAY_SERVER="$DISPLAY_SERVER" \
+        -e BRANCH_NAME="$BRANCH_NAME" \
+        '{{TALOS_TESTER}}';
+    done;
+  done < ./input.csv;
+)
+
+SUCCESS="$?";
+
+### Halt the machine in 5 minutes
+sudo shutdown -P 5 &
+
+### Upload logs if there was an error
+if [ "$SUCCESS" -ne "0" ]; then
+  sudo apt-get install -y python-pip;
+  sudo pip install awscli;
+  ERROR_PATH="errors/{{INSTANCE_TYPE}}/{{REGION}}/cloud-init-output.log";
+  sudo aws s3 cp /var/log/cloud-init-output.log \
+                              "s3://$RESULT_BUCKET/RESULT_PREFIX/$ERROR_PATH";
+fi;
+
+### Halt the machine now
+sudo shutdown -P now;

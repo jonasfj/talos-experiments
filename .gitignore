@@ -4,3 +4,4 @@ config.env
 analysis/node_modules/
 data-small/
 data-large/
+aws-tests/node_modules/

@@ -40,7 +40,13 @@ push-talos-tester:
 	docker login \
 		-u ${REGISTRY_USERNAME} \
 		-p ${REGISTRY_PASSWORD} \
-		-e ${REGISTRY_EMAIL};
+		-e ${REGISTRY_EMAIL} \
+		${REGISTRY_HOST};
 	docker push ${TALOS_TESTER};
 
+launch-aws-tests:
+	./aws-tests/node_modules/.bin/babel-node -r \
+			./aws-tests/launch-tests.js ${TALOS_TESTER};
+
 .PHONY: talos-tester debug-talos-tester check-talos-tester push-talos-tester
+.PHONY: launch-aws-tests

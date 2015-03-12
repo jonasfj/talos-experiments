@@ -50,5 +50,5 @@ c448634fb6c9   http://ftp.mozilla.org/pub/mozilla.org/firefox/tinderbox-builds/m
 
 
 TODO:
- - filter down to: suite > test (by click on table row)
+ + filter down to: suite > test (by click on table row)
  - generate data for: small-set on aws c4
