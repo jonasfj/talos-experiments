@@ -26,7 +26,7 @@
 
   # Install docker
   apt-get update;
-  apt-get install -y lxc-docker;
+  apt-get install -y linux-image-extra-$(uname -r) lxc-docker;
 
   ### Set Environment Variables
 
@@ -58,6 +58,7 @@
       export BRANCH_NAME="{{INSTANCE_TYPE}}/{{REGION}}/$DISPLAY_SERVER/$REV";
       export RESULT_PREFIX="{{RESULT_PREFIX}}/$BRANCH_NAME";
 
+      echo "talos for $BRANCH_NAME";
       sudo docker run --rm -i \
         -e BUILD_URL="$BUILD_URL" \
         -e TESTS="$TESTS" \
@@ -69,6 +70,7 @@
         -e DISPLAY_SERVER="$DISPLAY_SERVER" \
         -e BRANCH_NAME="$BRANCH_NAME" \
         '{{TALOS_TESTER}}';
+      echo "Ran talos successfully";
     done;
   done < ./input.csv;
 )
@@ -80,10 +82,14 @@ sudo shutdown -P 5 &
 
 ### Upload logs if there was an error
 if [ "$SUCCESS" -ne "0" ]; then
+  export AWS_ACCESS_KEY_ID='{{AWS_ACCESS_KEY_ID}}';
+  export AWS_SECRET_ACCESS_KEY='{{AWS_SECRET_ACCESS_KEY}}';
+  export AWS_DEFAULT_REGION='{{AWS_DEFAULT_REGION}}';
+  export RESULT_BUCKET='{{RESULT_BUCKET}}';
   sudo apt-get install -y python-pip;
   sudo pip install awscli;
   ERROR_PATH="errors/{{INSTANCE_TYPE}}/{{REGION}}/cloud-init-output.log";
-  sudo aws s3 cp /var/log/cloud-init-output.log \
+  sudo aws s3 cp '/var/log/cloud-init-output.log' \
                               "s3://$RESULT_BUCKET/RESULT_PREFIX/$ERROR_PATH";
 fi;
 
