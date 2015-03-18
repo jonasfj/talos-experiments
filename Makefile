@@ -48,5 +48,9 @@ launch-aws-tests:
 	./aws-tests/node_modules/.bin/babel-node -r \
 			./aws-tests/launch-tests.js ${TALOS_TESTER};
 
+rank-configs:
+	./analysis/node_modules/.bin/babel-node -r \
+			./analysis/rank-configs ${RESULT_PREFIX};
+
 .PHONY: talos-tester debug-talos-tester check-talos-tester push-talos-tester
-.PHONY: launch-aws-tests
+.PHONY: launch-aws-tests rank-configs
