@@ -68,5 +68,8 @@ rank-configs-by-ability:
 	./analysis/node_modules/.bin/babel-node -r \
 			./analysis/rank-configs-by-ability;
 
+install:
+	cd ./analysis && npm install;
+
 .PHONY: talos-tester debug-talos-tester check-talos-tester push-talos-tester
 .PHONY: launch-aws-tests rank-configs render-aws-user-data-script
