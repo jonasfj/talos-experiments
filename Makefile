@@ -61,12 +61,12 @@ download-new-results:
 # Rank by stability of results
 rank-configs-by-stability:
 	./analysis/node_modules/.bin/babel-node -r \
-			./analysis/rank-configs;
+			./analysis/rank-configs-by-stability;
 
 # Rank by ability to detect regression
 rank-configs-by-ability:
 	./analysis/node_modules/.bin/babel-node -r \
-			./analysis/rank-configs;
+			./analysis/rank-configs-by-ability;
 
 .PHONY: talos-tester debug-talos-tester check-talos-tester push-talos-tester
 .PHONY: launch-aws-tests rank-configs render-aws-user-data-script
