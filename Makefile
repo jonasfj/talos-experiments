@@ -52,9 +52,10 @@ render-aws-user-data-script:
 	./aws-tests/node_modules/.bin/babel-node -r \
 			./aws-tests/launch-tests.js render ${TALOS_TESTER};
 
-download-results:
-	mkdir -p results/;
-	aws s3 sync s3://jonasfj-talos-test-results/${RESULT_PREFIX} ./results/ \
+# Download new results, into the new/ folder, we should manually move them there
+download-new-results:
+	mkdir -p results/new/;
+	aws s3 sync s3://jonasfj-talos-test-results/${RESULT_PREFIX} ./results/new/ \
 			--exclude "*" --include "*datazilla.json"
 
 # Rank by stability of results
