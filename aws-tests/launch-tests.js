@@ -76,9 +76,13 @@ var userData = (options) => {
   return new Buffer(data).toString('base64');
 };
 
+// Export userData
+exports.userData = userData;
+
 // Main function
 var main = async (argv) => {
-  var image = argv[2];
+  var action = argv[2];
+  var image = argv[3];
   var keyName         = process.env.EC2_KEY_NAME;
   var accessKeyId     = process.env.AWS_EC2_ACCESS_KEY_ID;
   var secretAccessKey = process.env.AWS_EC2_SECRET_ACCESS_KEY;
@@ -102,6 +106,15 @@ var main = async (argv) => {
     REGISTRY_HOST:          process.env.REGISTRY_HOST,
     TALOS_TESTER:           image
   };
+
+  var dryrun = false;
+  if (action === 'render') {
+    dryrun = true;
+    console.log("dryrun");
+  } else if (action !== 'launch') {
+    console.log("Unknown action!");
+  }
+
   console.log("Launching instances, with base options:");
   console.log(JSON.stringify(baseOptions, null, 2));
 
@@ -113,6 +126,12 @@ var main = async (argv) => {
         INSTANCE_TYPE:      instanceType
       }, baseOptions);
       console.log("Launching %s in %s", instanceType, region);
+      if (dryrun) {
+        console.log("dry run so skipping launch, but config is:");
+        var data = new Buffer(userData(options), 'base64').toString('utf8');
+        console.log(data);
+        continue;
+      }
       await ec2.runInstances({
         ImageId:        ebsAMIs[region],
         MaxCount:       1,

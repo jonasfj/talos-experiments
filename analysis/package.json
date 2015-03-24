@@ -19,9 +19,10 @@
     "connect-browserify":   "^3.2.1",
     "babelify":             "^5.0.4",
     "babel-runtime":        "^4.7.1",
-    "compute.io":           "^0.103.0",
+    "compute.io":           "^0.104.0",
     "react":                "^0.13.0",
-    "react-bootstrap":      "^0.16.1"
+    "react-bootstrap":      "^0.16.1",
+    "recursive-readdir":    "^1.2.1"
   },
   "devDependencies": {
     "mocha":                "^2.1.0",

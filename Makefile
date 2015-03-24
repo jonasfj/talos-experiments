@@ -46,11 +46,26 @@ push-talos-tester:
 
 launch-aws-tests:
 	./aws-tests/node_modules/.bin/babel-node -r \
-			./aws-tests/launch-tests.js ${TALOS_TESTER};
+			./aws-tests/launch-tests.js launch ${TALOS_TESTER};
 
-rank-configs:
+render-aws-user-data-script:
+	./aws-tests/node_modules/.bin/babel-node -r \
+			./aws-tests/launch-tests.js render ${TALOS_TESTER};
+
+download-results:
+	mkdir -p results/;
+	aws s3 sync s3://jonasfj-talos-test-results/${RESULT_PREFIX} ./results/ \
+			--exclude "*" --include "*datazilla.json"
+
+# Rank by stability of results
+rank-configs-by-stability:
 	./analysis/node_modules/.bin/babel-node -r \
-			./analysis/rank-configs ${RESULT_PREFIX};
+			./analysis/rank-configs;
+
+# Rank by ability to detect regression
+rank-configs-by-ability:
+	./analysis/node_modules/.bin/babel-node -r \
+			./analysis/rank-configs;
 
 .PHONY: talos-tester debug-talos-tester check-talos-tester push-talos-tester
-.PHONY: launch-aws-tests rank-configs
+.PHONY: launch-aws-tests rank-configs render-aws-user-data-script

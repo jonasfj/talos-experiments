@@ -59,7 +59,7 @@
       export RESULT_PREFIX="{{RESULT_PREFIX}}/$BRANCH_NAME";
 
       echo "talos for $BRANCH_NAME";
-      sudo docker run --rm -i \
+      sudo docker run --rm \
         -e BUILD_URL="$BUILD_URL" \
         -e TESTS="$TESTS" \
         -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
