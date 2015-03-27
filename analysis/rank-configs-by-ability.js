@@ -231,8 +231,8 @@ var main = async (argv) => {
     getTestsAndCases(_.find(dataFiles, {
       file: 'aws/c4.large/us-west-1/xvfb/' + revA
     }))
-  );
-  */
+  );*/
+
 };
 
 

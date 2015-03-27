@@ -52,10 +52,10 @@
   # For each input file
   while IFS=';' read -r REV BUILD_URL; do
     # for each display server option
-    for DISPLAY_SERVER in xvfb xorg; do
+    for DISPLAY_SERVER in {{DISPLAY_SERVERS}}; do
       export BUILD_URL="$BUILD_URL";
       export DISPLAY_SERVER="$DISPLAY_SERVER";
-      export BRANCH_NAME="{{INSTANCE_TYPE}}/{{REGION}}/$DISPLAY_SERVER/$REV";
+      export BRANCH_NAME="{{INSTANCE_TYPE}}/{{REGION}}/$DISPLAY_SERVER/$REV/{{NODE_INDEX}}";
       export RESULT_PREFIX="{{RESULT_PREFIX}}/$BRANCH_NAME";
 
       echo "talos for $BRANCH_NAME";

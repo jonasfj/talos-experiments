@@ -35,7 +35,11 @@ var instanceStoreHVMAMIs = {
 };
 
 var INSTANCE_TYPES = [
-  // General Purpose
+  // Ability testing
+  'c4.large',
+  'c3.large'
+
+  /*// General Purpose
   'm3.medium',
   'm3.xlarge',
   'm3.2xlarge',
@@ -57,7 +61,7 @@ var INSTANCE_TYPES = [
 
 var REGIONS = [
   // Old region
-  'us-east-1',
+  //'us-east-1',
   // New region
   //'eu-central-1', // doesn't have C4 instances
   // Region close by
@@ -104,7 +108,8 @@ var main = async (argv) => {
     REGISTRY_PASSWORD:      process.env.REGISTRY_PASSWORD,
     REGISTRY_EMAIL:         process.env.REGISTRY_EMAIL,
     REGISTRY_HOST:          process.env.REGISTRY_HOST,
-    TALOS_TESTER:           image
+    TALOS_TESTER:           image,
+    DISPLAY_SERVERS:        process.env.DISPLAY_SERVERS
   };
 
   var dryrun = false;
@@ -118,30 +123,35 @@ var main = async (argv) => {
   console.log("Launching instances, with base options:");
   console.log(JSON.stringify(baseOptions, null, 2));
 
+  var nb_nodes = parseInt(process.env.NB_NODES || 0);
+
   for(var region of REGIONS) {
     var ec2 = new aws.EC2({accessKeyId, secretAccessKey, region});
     for(var instanceType of INSTANCE_TYPES) {
-      var options = _.defaults({
-        REGION:             region,
-        INSTANCE_TYPE:      instanceType
-      }, baseOptions);
-      console.log("Launching %s in %s", instanceType, region);
-      if (dryrun) {
-        console.log("dry run so skipping launch, but config is:");
-        var data = new Buffer(userData(options), 'base64').toString('utf8');
-        console.log(data);
-        continue;
+      for(var i = 0; i < nb_nodes; i++) {
+        var options = _.defaults({
+          REGION:             region,
+          INSTANCE_TYPE:      instanceType,
+          NODE_INDEX:         '' + i
+        }, baseOptions);
+        console.log("Launching %s in %s", instanceType, region);
+        if (dryrun) {
+          console.log("dry run so skipping launch, but config is:");
+          var data = new Buffer(userData(options), 'base64').toString('utf8');
+          console.log(data);
+          continue;
+        }
+        await ec2.runInstances({
+          ImageId:        ebsAMIs[region],
+          MaxCount:       1,
+          MinCount:       1,
+          InstanceInitiatedShutdownBehavior:    'terminate',
+          InstanceType:   instanceType,
+          KeyName:        keyName,
+          SecurityGroups: ['ssh-only'],
+          UserData:       userData(options)
+        }).promise();
       }
-      await ec2.runInstances({
-        ImageId:        ebsAMIs[region],
-        MaxCount:       1,
-        MinCount:       1,
-        InstanceInitiatedShutdownBehavior:    'terminate',
-        InstanceType:   instanceType,
-        KeyName:        keyName,
-        SecurityGroups: ['ssh-only'],
-        UserData:       userData(options)
-      }).promise();
     }
   }
   console.log("done");
