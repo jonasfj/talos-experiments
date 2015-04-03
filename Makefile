@@ -63,10 +63,20 @@ rank-configs-by-stability:
 	./analysis/node_modules/.bin/babel-node -r \
 			./analysis/rank-configs-by-stability;
 
+# Rank by stability of results merging revisions
+rank-configs-by-stability-merge-rev:
+	./analysis/node_modules/.bin/babel-node -r \
+			./analysis/rank-configs-by-stability-merge-rev;
+
 # Rank by ability to detect regression
 rank-configs-by-ability:
 	./analysis/node_modules/.bin/babel-node -r \
 			./analysis/rank-configs-by-ability;
+
+# Rank by ability to detect regression
+rank-configs-by-ability-10x:
+	./analysis/node_modules/.bin/babel-node -r \
+			./analysis/rank-configs-by-ability-10x;
 
 install:
 	cd ./analysis && npm install;

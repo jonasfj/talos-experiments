@@ -52,3 +52,45 @@ c448634fb6c9   http://ftp.mozilla.org/pub/mozilla.org/firefox/tinderbox-builds/m
 TODO:
  + filter down to: suite > test (by click on table row)
  - generate data for: small-set on aws c4
+
+azure vm create --verbose --json --location "West US" -z A1 talos-A1 'b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu-14_04_2_LTS-amd64-server-20150309-en-us-30GB' --custom-data ./launch-script.sh
+
+Standard_D1,
+Standard_D2,
+Standard_D3,
+Standard_D4,
+Small,
+Medium,
+Large,
+ExtraLarge,
+
+ExtraSmall,
+A5,
+A6,
+A7,
+A8,
+A9,
+A10,
+A11,
+Basic_A0,
+Basic_A1,
+Basic_A2,
+Basic_A3,
+Basic_A4,
+
+Standard_D11,
+Standard_D12,
+Standard_D13,
+Standard_D14,
+Standard_G1,
+Standard_G2,
+Standard_G3,
+Standard_G4,
+Standard_G5
+
+Missing: A1, D1, D2, D4
+Started: A1, D1, D2, D4
+
+azure vm create --verbose --json --location "West US" -z Small talos-A1 -e 22 'b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu-14_04_2_LTS-amd64-server-20150309-en-us-30GB' --custom-data ./launch-script.sh --userName ubuntu --password '123s4_ABC=abc'
+
+azure vm create --verbose --json --location "West US" -z Standard_D1 talos-D1 -e 22 'b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu-14_04_2_LTS-amd64-server-20150309-en-us-30GB' --custom-data ./launch-script.sh --userName ubuntu --password '123s4_ABC=abc'
